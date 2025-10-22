@@ -130,10 +130,21 @@ define('DEBUG_MODE', true);
                                 file_put_contents('config.php', $config_content);
                                 
                                 // Test database connection
-                                $conn_test = new mysqli($db_host, $db_user, $db_pass);
-                                $db_success = !$conn_test->connect_error;
-                                if ($db_success) {
-                                    $conn_test->close();
+                                $db_success = false;
+                                $db_error = '';
+                                
+                                try {
+                                    $conn_test = new mysqli($db_host, $db_user, $db_pass);
+                                    if ($conn_test->connect_error) {
+                                        $db_error = $conn_test->connect_error;
+                                    } else {
+                                        $db_success = true;
+                                        $conn_test->close();
+                                    }
+                                } catch (mysqli_sql_exception $e) {
+                                    $db_error = $e->getMessage();
+                                } catch (Exception $e) {
+                                    $db_error = $e->getMessage();
                                 }
                                 ?>
                                 <div class="step-indicator">
@@ -187,6 +198,9 @@ define('DEBUG_MODE', true);
                                 <?php else: ?>
                                     <div class="alert alert-danger">
                                         <i class="fas fa-exclamation-circle me-2"></i>Database connection failed. Please check your credentials.
+                                        <?php if (!empty($db_error)): ?>
+                                            <div class="mt-2"><strong>Error:</strong> <?php echo htmlspecialchars($db_error); ?></div>
+                                        <?php endif; ?>
                                     </div>
                                     <a href="install.php" class="btn btn-primary">Try Again</a>
                                 <?php endif; ?>
