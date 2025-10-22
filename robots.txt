@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin.php
+Disallow: /includes/
+Disallow: /assets/
+
+Sitemap: http://localhost/packers-movers/sitemap.php
