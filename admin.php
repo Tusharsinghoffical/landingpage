@@ -4,6 +4,8 @@ include 'includes/db_config.php';
 // Simple authentication (in a real application, use proper authentication)
 $authenticated = false;
 $auth_error = "";
+$result = null;
+$database_error = false;
 
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,9 +23,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // If authenticated, show the admin panel
 if ($authenticated) {
-    // Fetch inquiries from database
-    $sql = "SELECT * FROM inquiries ORDER BY created_at DESC";
-    $result = $conn->query($sql);
+    // Check if database connection is available
+    if ($conn) {
+        // Fetch inquiries from database
+        $sql = "SELECT * FROM inquiries ORDER BY created_at DESC";
+        $result = $conn->query($sql);
+    } else {
+        $database_error = true;
+    }
     
     include 'includes/header.php';
     ?>
@@ -33,12 +40,20 @@ if ($authenticated) {
             <div class="col-12">
                 <h1 class="display-4 fw-bold mb-4">Admin Panel - Inquiries</h1>
                 
+                <?php if ($database_error): ?>
+                    <div class="alert alert-warning">
+                        <h4><i class="fas fa-exclamation-triangle me-2"></i>Database Connection Required</h4>
+                        <p>The admin panel requires a database connection to display customer inquiries. Please ensure MySQL is running and the database is set up correctly.</p>
+                        <p>You can still use the admin panel to test authentication, but inquiry data will not be available until a database connection is established.</p>
+                    </div>
+                <?php endif; ?>
+                
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-primary text-white">
                         <h5 class="mb-0">Customer Inquiries</h5>
                     </div>
                     <div class="card-body">
-                        <?php if ($result->num_rows > 0): ?>
+                        <?php if ($result && $result->num_rows > 0): ?>
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover">
                                     <thead>
@@ -67,7 +82,7 @@ if ($authenticated) {
                                     </tbody>
                                 </table>
                             </div>
-                        <?php else: ?>
+                        <?php elseif (!$database_error): ?>
                             <p class="text-center">No inquiries found.</p>
                         <?php endif; ?>
                         
@@ -100,6 +115,7 @@ if ($authenticated) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin Login - Reliable Packers & Movers</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </head>
     <body class="bg-light">
         <div class="container">
