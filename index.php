@@ -1,4 +1,8 @@
-<?php include 'includes/header.php'; ?>
+<?php 
+// Check if we're on Render and set the port accordingly
+$port = $_ENV['PORT'] ?? 8000;
+
+include 'includes/header.php'; ?>
 
 <!-- Hero Section -->
 <section class="hero-section">
