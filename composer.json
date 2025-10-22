@@ -1,0 +1,15 @@
+{
+    "name": "tusharsinghoffical/packers-movers-website",
+    "description": "Professional Packers & Movers Website",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tushar Singh",
+            "email": "tusharsinghoffical@gmail.com"
+        }
+    ]
+}
