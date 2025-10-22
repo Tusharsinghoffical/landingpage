@@ -1,6 +1,19 @@
 # Enable rewrite engine
 RewriteEngine On
 
+# Handle trailing slashes
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$ /$1 [L,R=301]
+
+# Handle PHP files without extension
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L]
+
+# Handle the main routing
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA]
+
 # Security headers
 <IfModule mod_headers.c>
     Header always set X-Content-Type-Options nosniff

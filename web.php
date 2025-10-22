@@ -2,6 +2,9 @@
 // This file is used by Render to serve the application
 // It's a simple router that includes the appropriate PHP file based on the request URI
 
+// For Docker with Apache, this file might not be needed as Apache will handle routing
+// But we'll keep it for compatibility
+
 // Get the request URI and remove query string
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
@@ -25,7 +28,8 @@ $validPages = [
     'sitemap' => 'sitemap.php',
     'install' => 'install.php',
     'health-check' => 'health-check.php',
-    'deploy' => 'deploy.php'
+    'deploy' => 'deploy.php',
+    'healthz' => 'healthz.php'
 ];
 
 // Check if the URI matches a valid page
