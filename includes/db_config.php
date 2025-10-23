@@ -50,12 +50,23 @@ try {
     }
 } catch (mysqli_sql_exception $e) {
     // If connection fails, show a user-friendly message
-    echo "<div class='alert alert-warning text-center'>";
-    echo "<strong>Database Connection Notice:</strong> ";
-    echo "The inquiry form requires a database connection. ";
-    echo "Please ensure MySQL is running and the database is set up correctly. ";
-    echo "You can still browse the website, but the inquiry form will not work without a database connection.";
-    echo "</div>";
+    // Only show this message if we're on the inquiry page
+    $show_error = true;
+    if (isset($_SERVER['SCRIPT_NAME'])) {
+        $current_page = basename($_SERVER['SCRIPT_NAME']);
+        if ($current_page != 'inquiry.php') {
+            $show_error = false;
+        }
+    }
+    
+    if ($show_error) {
+        echo "<div class='alert alert-warning text-center'>";
+        echo "<strong>Database Connection Notice:</strong> ";
+        echo "The inquiry form requires a database connection. ";
+        echo "Please ensure MySQL is running and the database is set up correctly. ";
+        echo "You can still browse the website, but the inquiry form will not work without a database connection.";
+        echo "</div>";
+    }
     $conn = null; // Set to null so we can check later
 }
 ?>
